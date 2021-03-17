@@ -1,16 +1,17 @@
 package com.example.simplelogger.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import java.util.*
 
 class SimpleLoggerViewModel : ViewModel() {
   // TODO: Implement the ViewModel
 
-  /* done = Did the timer expire? */
-  private var _done = MutableLiveData<Boolean>()
-  val done: LiveData<Boolean>
-    get() = _done
+  private var _isTimerRunning = MutableLiveData<Boolean>(false)
+  val isTimerRunning: LiveData<Boolean>
+    get() = _isTimerRunning
 
   /* Elapsed time in ms */
   private var _cur = MutableLiveData<Long>()
@@ -20,17 +21,35 @@ class SimpleLoggerViewModel : ViewModel() {
   private var lim = 0L
   private var baseTime = 0L
 
+  private lateinit var timer : Timer
+
   fun initialize(t: Long) {
-    _done.value = false
+    assert(isTimerRunning.value == false)
+    _isTimerRunning.value = true
     _cur.value = 0L
+
     baseTime = System.currentTimeMillis()
-    lim = baseTime + t
+    lim = t
+
+    timer = Timer()
+    timer.schedule(object : TimerTask() {
+      override fun run() {
+        Log.d("DBG", "hi")
+        async_update()
+      } }, 0L, 1L
+    )
+  }
+
+  private fun finish() {
+    _isTimerRunning.postValue(false)
+    lim = 0L
+    timer.cancel()
   }
 
   fun async_update() {
-    val t = System.currentTimeMillis()
-    if (t >= lim) _done.postValue(true)
-    _cur.postValue(min(lim - baseTime, System.currentTimeMillis() - baseTime))
+    val t = System.currentTimeMillis() - baseTime
+    _cur.postValue(min(lim, t))
+    if (t >= lim) finish()
   }
 
   private fun min (a: Long, b: Long) : Long {
