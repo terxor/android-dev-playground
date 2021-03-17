@@ -12,4 +12,7 @@ interface MyNotesDao {
 
   @Query("SELECT *  from MyNotes_table")
   fun getAll() : LiveData<List<MyNotes>>
+
+  @Query("DELETE from MyNotes_table")
+  suspend fun clear()
 }

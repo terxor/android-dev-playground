@@ -4,10 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.noteskeeper.R
@@ -24,6 +21,7 @@ class Notes : Fragment() {
   private lateinit var linearLayout : LinearLayout
   private lateinit var textfield: EditText
   private lateinit var button : Button
+  private lateinit var clearButton : Button
 
   override fun onCreateView(
     inflater: LayoutInflater, container: ViewGroup?,
@@ -32,6 +30,7 @@ class Notes : Fragment() {
     val root = inflater.inflate(R.layout.notes_fragment, container, false)
     linearLayout=root.findViewById(R.id.linearLayout)
     button=root.findViewById(R.id.button)
+    clearButton = root.findViewById(R.id.button2)
     textfield=root.findViewById(R.id.editTextTextPersonName)
 
     val application = requireNotNull(this.activity).application
@@ -50,18 +49,28 @@ class Notes : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
     button.setOnClickListener(){
-      viewModel.add(textfield.text.toString())
+      val t = textfield.text.toString()
+      if (t.trim() == "") {
+        Toast.makeText(context, "You need to enter something", Toast.LENGTH_SHORT).show()
+      } else {
+        viewModel.add(textfield.text.toString())
+        textfield.setText("")
+        linearLayout.requestFocus()
+      }
+    }
+
+    clearButton.setOnClickListener {
+      viewModel.clearAll()
+      linearLayout.requestFocus()
     }
   }
 
   private fun refreshList(list: List<MyNotes>) {
     linearLayout.removeAllViews()
-    if (list != null) {
-      for(i in list) {
-        val tmp = TextView(activity)
-        tmp.text = i.x
-        linearLayout.addView(tmp)
-      }
+    for(i in list) {
+      val tmp = TextView(activity)
+      tmp.text = i.x
+      linearLayout.addView(tmp)
     }
   }
 

@@ -37,4 +37,10 @@ class NotesViewModel(
     }
     return l
   }
+
+  fun clearAll() {
+    viewModelScope.launch {
+      database.clear()
+    }
+  }
 }
