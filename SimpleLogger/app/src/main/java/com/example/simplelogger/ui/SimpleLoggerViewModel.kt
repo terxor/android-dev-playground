@@ -68,7 +68,7 @@ class SimpleLoggerViewModel(private val app: Application) : AndroidViewModel(app
     val t = System.currentTimeMillis() - baseTime
     val z = min(lim, t)
     _cur.postValue(z)
-
+    //Progress
     val progress = (100.0 * z) / lim
     val notificationManager = ContextCompat.getSystemService(
       app,
