@@ -28,8 +28,9 @@ fun NotificationManager.sendNotification(messageBody: String, applicationContext
     .setSmallIcon(R.drawable.ic_launcher_background)
     .setContentTitle(applicationContext.getString(R.string.default_title))
     .setContentText(messageBody)
-    .setPriority(NotificationCompat.PRIORITY_HIGH)
+    .setPriority(NotificationCompat.PRIORITY_LOW)
     .setContentIntent(contentPendingIntent)
-    .setAutoCancel(true)
+    .setOngoing(true)
+    .setOnlyAlertOnce(true)
   notify(NOTIFICATION_ID, builder.build())
 }

@@ -48,7 +48,7 @@ class SimpleLoggerViewModel(private val app: Application) : AndroidViewModel(app
           Log.d("DBG", "hi")
           async_update()
         }
-      }, 0L, 1L
+      }, 0L, 500L
     )
   }
 
@@ -61,12 +61,20 @@ class SimpleLoggerViewModel(private val app: Application) : AndroidViewModel(app
       app,
       NotificationManager::class.java
     ) as NotificationManager
-    notificationManager.sendNotification("Timer finished", app)
+    notificationManager.cancelAll()
   }
 
   fun async_update() {
     val t = System.currentTimeMillis() - baseTime
-    _cur.postValue(min(lim, t))
+    val z = min(lim, t)
+    _cur.postValue(z)
+
+    val progress = (100.0 * z) / lim
+    val notificationManager = ContextCompat.getSystemService(
+      app,
+      NotificationManager::class.java
+    ) as NotificationManager
+    notificationManager.sendNotification("Current: $progress", app)
     if (t >= lim) finish()
   }
 
