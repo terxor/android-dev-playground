@@ -1,12 +1,17 @@
 package com.example.simplelogger.ui
 
+import android.app.Application
+import android.app.NotificationManager
 import android.util.Log
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+import com.example.simplelogger.BuildConfig
+import com.example.simplelogger.util.sendNotification
 import java.util.*
 
-class SimpleLoggerViewModel : ViewModel() {
+class SimpleLoggerViewModel(private val app: Application) : AndroidViewModel(app) {
   // TODO: Implement the ViewModel
 
   private var _isTimerRunning = MutableLiveData<Boolean>(false)
@@ -24,7 +29,12 @@ class SimpleLoggerViewModel : ViewModel() {
   private lateinit var timer : Timer
 
   fun initialize(t: Long) {
-    assert(isTimerRunning.value == false)
+
+    /* Timer should not be running */
+    if (BuildConfig.DEBUG && isTimerRunning.value != false) {
+      error("Assertion failed")
+    }
+
     _isTimerRunning.value = true
     _cur.value = 0L
 
@@ -32,11 +42,13 @@ class SimpleLoggerViewModel : ViewModel() {
     lim = t
 
     timer = Timer()
-    timer.schedule(object : TimerTask() {
-      override fun run() {
-        Log.d("DBG", "hi")
-        async_update()
-      } }, 0L, 1L
+    timer.schedule(
+      object : TimerTask() {
+        override fun run() {
+          Log.d("DBG", "hi")
+          async_update()
+        }
+      }, 0L, 1L
     )
   }
 
@@ -44,6 +56,12 @@ class SimpleLoggerViewModel : ViewModel() {
     _isTimerRunning.postValue(false)
     lim = 0L
     timer.cancel()
+
+    val notificationManager = ContextCompat.getSystemService(
+      app,
+      NotificationManager::class.java
+    ) as NotificationManager
+    notificationManager.sendNotification("Timer finished", app)
   }
 
   fun async_update() {

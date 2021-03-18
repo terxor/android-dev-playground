@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SimpleLogger</string>
+    <string name="default_channel_id">Default Notif Channel</string>
+    <string name="default_title">Notif title</string>
 </resources>

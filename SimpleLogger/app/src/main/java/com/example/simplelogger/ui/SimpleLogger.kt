@@ -1,5 +1,9 @@
 package com.example.simplelogger.ui
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -63,6 +67,8 @@ class SimpleLogger : Fragment() {
       }
     })
 
+    createChannel(getString(R.string.default_channel_id), "My Channel")
+
     return root
   }
 
@@ -71,4 +77,28 @@ class SimpleLogger : Fragment() {
     // TODO: Use the ViewModel
   }
 
+
+  private fun createChannel(channelId: String, channelName: String) {
+    // TODO: Step 1.6 START create a channel
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+      val notificationChannel = NotificationChannel(
+        channelId,
+        channelName,
+        // TODO: Step 2.4 change importance
+        NotificationManager.IMPORTANCE_HIGH
+      )
+      // TODO: Step 2.6 disable badges for this channel
+
+      notificationChannel.enableLights(true)
+      notificationChannel.lightColor = Color.RED
+      notificationChannel.enableVibration(true)
+      notificationChannel.description = "Time for breakfast"
+
+      val notificationManager = requireActivity().getSystemService(
+        NotificationManager::class.java
+      )
+      notificationManager.createNotificationChannel(notificationChannel)
+    }
+    // TODO: Step 1.6 END create channel
+  }
 }
