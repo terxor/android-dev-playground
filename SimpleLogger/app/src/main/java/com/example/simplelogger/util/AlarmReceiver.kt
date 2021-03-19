@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.simplelogger.MainActivity
 
@@ -16,10 +17,11 @@ class AlarmReceiver : BroadcastReceiver() {
   private val NOTIFICATION_ID = 0
 
   // Notification channel ID.
-  private val PRIMARY_CHANNEL_ID = "primary_notification_channel"
+  private val PRIMARY_CHANNEL_ID = "Default Notif Channel"
 
   override fun onReceive(context: Context, intent: Intent) {
     // This method is called when the BroadcastReceiver is receiving an Intent broadcast.
+    Log.d("DBG", "Received")
     mNotificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
     deliverNotification(context)
   }

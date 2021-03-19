@@ -12,7 +12,7 @@
         <receiver
             android:name=".util.AlarmReceiver"
             android:enabled="true"
-            android:exported="false"></receiver>
+            android:exported="false" />
         <!-- Temporary method to not restart activity -->
         <activity
             android:name=".MainActivity"

@@ -16,8 +16,9 @@ class AlarmViewModel(val app: Application) : AndroidViewModel(app) {
 
   fun setAlarm(t: Long) {
     Log.d("DBG", "Setting alarm for $t ms")
+
     val contentIntent = Intent(app.applicationContext, AlarmReceiver::class.java)
-    val contentPendingIntent = PendingIntent.getActivity(
+    val contentPendingIntent = PendingIntent.getBroadcast(
       app.applicationContext,
       NOTIFICATION_ID,
       contentIntent,
@@ -25,7 +26,11 @@ class AlarmViewModel(val app: Application) : AndroidViewModel(app) {
     )
     val alarmManager = app.getSystemService(ALARM_SERVICE) as AlarmManager
     var triggerTime = System.currentTimeMillis() + t
-    alarmManager.setWindow(AlarmManager.RTC_WAKEUP, triggerTime, 1000L, contentPendingIntent)
+    Log.d("DBG", "alarm for $triggerTime")
+
+    alarmManager.setWindow(AlarmManager.RTC_WAKEUP, triggerTime,1000L, contentPendingIntent)
+
+    Log.d("DBG", "after ${System.currentTimeMillis()}")
   }
 
 }
