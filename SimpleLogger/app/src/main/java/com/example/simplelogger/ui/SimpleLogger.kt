@@ -14,7 +14,9 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.simplelogger.R
 
 class SimpleLogger : Fragment() {
@@ -40,6 +42,9 @@ class SimpleLogger : Fragment() {
     textView = root.findViewById(R.id.textView)
     textField = root.findViewById<EditText>(R.id.editTextTextPersonName)
     button = root.findViewById<Button>(R.id.button)
+    root.findViewById<Button>(R.id.buttonToAlarm).setOnClickListener {
+      findNavController().navigate(R.id.action_simpleLogger_to_alarmFragment)
+    }
 
     viewModel = ViewModelProvider(this).get(SimpleLoggerViewModel::class.java)
 
@@ -57,8 +62,9 @@ class SimpleLogger : Fragment() {
     viewModel.cur.removeObservers(viewLifecycleOwner)
     viewModel.isTimerRunning.removeObservers(viewLifecycleOwner)
 
-    viewModel.cur.observe(viewLifecycleOwner, { count -> textView.text = count.toString() })
-    viewModel.isTimerRunning.observe(viewLifecycleOwner, { timerRunning ->
+    viewModel.cur.observe(viewLifecycleOwner,
+      Observer<Long> { count -> textView.text = count.toString() })
+    viewModel.isTimerRunning.observe(viewLifecycleOwner, Observer<Boolean> { timerRunning ->
       run {
         if (!timerRunning) Toast.makeText(context, "DONE", Toast.LENGTH_SHORT).show()
         textField.setText("")
