@@ -36,7 +36,9 @@ class AlarmFragment : Fragment() {
     buttonSetAlarm.setOnClickListener {
       val t = editText.text.toString().toLongOrNull()
       if (t == null) Toast.makeText(context, "Enter time in ms", Toast.LENGTH_SHORT).show()
-      else viewModel.setAlarm(t)
+      else {
+        viewModel.setAlarm(t)
+      }
     }
     return root
   }

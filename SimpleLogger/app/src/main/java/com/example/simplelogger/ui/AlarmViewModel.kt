@@ -10,7 +10,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.simplelogger.util.AlarmReceiver
 
 
-class AlarmViewModel(val app: Application) : AndroidViewModel(app) {
+class  AlarmViewModel(val app: Application) : AndroidViewModel(app) {
   // TODO: Implement the ViewModel
   private val NOTIFICATION_ID = 0
 
